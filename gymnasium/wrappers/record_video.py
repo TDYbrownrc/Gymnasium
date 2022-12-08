@@ -46,6 +46,7 @@ class RecordVideo(gym.Wrapper):
         video_length: int = 0,
         name_prefix: str = "rl-video",
         disable_logger: bool = False,
+        video_type: str = 'mp4'
     ):
         """Wrapper records videos of rollouts.
 
@@ -58,6 +59,7 @@ class RecordVideo(gym.Wrapper):
                 Otherwise, snippets of the specified length are captured
             name_prefix (str): Will be prepended to the filename of the recordings
             disable_logger (bool): Whether to disable moviepy logger or not.
+            video_type (str): What type of video to record (.mp4 or .gif)
 
         """
         super().__init__(env)
@@ -85,6 +87,7 @@ class RecordVideo(gym.Wrapper):
         self.name_prefix = name_prefix
         self.step_id = 0
         self.video_length = video_length
+        self.video_type = video_type
 
         self.recording = False
         self.terminated = False

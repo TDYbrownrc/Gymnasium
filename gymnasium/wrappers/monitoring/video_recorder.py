@@ -25,6 +25,7 @@ class VideoRecorder:
         enabled: bool = True,
         base_path: Optional[str] = None,
         disable_logger: bool = False,
+        video_type: str = "mp4"
     ):
         """Video recorder renders a nice movie of a rollout, frame by frame.
 
@@ -52,6 +53,7 @@ class VideoRecorder:
         self.enabled = enabled
         self.disable_logger = disable_logger
         self._closed = False
+        self.video_type = video_type   
 
         self.render_history = []
         self.env = env
@@ -73,7 +75,11 @@ class VideoRecorder:
         if path is not None and base_path is not None:
             raise error.Error("You can pass at most one of `path` or `base_path`.")
 
-        required_ext = ".mp4"
+        if self.video_type == 'gif':
+            required_ext = ".gif"
+        else:
+            required_ext = ".mp4"
+
         if path is None:
             if base_path is not None:
                 # Base path given, append ext
@@ -97,7 +103,8 @@ class VideoRecorder:
 
         # Dump metadata
         self.metadata = metadata or {}
-        self.metadata["content_type"] = "video/mp4"
+
+        self.metadata["content_type"] = f"video/{self.video_type}"
         self.metadata_path = f"{path_base}.meta.json"
         self.write_metadata()
 
@@ -158,7 +165,10 @@ class VideoRecorder:
 
             clip = ImageSequenceClip(self.recorded_frames, fps=self.frames_per_sec)
             moviepy_logger = None if self.disable_logger else "bar"
-            clip.write_videofile(self.path, logger=moviepy_logger)
+            if self.video_type == '.gif':
+                clip.write_gif(self.path, logger=moviepy_logger)
+            else:
+                clip.write_videofile(self.path, logger=moviepy_logger)
         else:
             # No frames captured. Set metadata.
             if self.metadata is None:
