@@ -127,6 +127,7 @@ class RecordVideo(gym.Wrapper):
             base_path=base_path,
             metadata={"step_id": self.step_id, "episode_id": self.episode_id},
             disable_logger=self.disable_logger,
+            video_type=self.video_type
         )
 
         self.video_recorder.capture_frame()
