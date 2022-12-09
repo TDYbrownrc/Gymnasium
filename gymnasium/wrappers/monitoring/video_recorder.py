@@ -165,7 +165,7 @@ class VideoRecorder:
 
             clip = ImageSequenceClip(self.recorded_frames, fps=self.frames_per_sec)
             moviepy_logger = None if self.disable_logger else "bar"
-            if self.video_type == '.gif':
+            if self.video_type == 'gif':
                 clip.write_gif(self.path, logger=moviepy_logger)
             else:
                 clip.write_videofile(self.path, logger=moviepy_logger)
